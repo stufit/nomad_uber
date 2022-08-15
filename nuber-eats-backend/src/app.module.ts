@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { Restaurant } from './restaurants/entities/restaurants.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -37,7 +38,8 @@ import { ConfigModule } from '@nestjs/config';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       //entities: [__dirname + '/../**/*.entity{.ts,.js}'],
-      synchronize: true,
+      entities: [Restaurant],
+      synchronize: process.env.NODE_ENV !== 'prod', // prod환경이 아닌 경우에는 싱크 true로 설정
       logging: true,
     }),
     RestaurantsModule,

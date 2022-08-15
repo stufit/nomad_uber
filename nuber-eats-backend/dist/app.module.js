@@ -14,6 +14,7 @@ const graphql_1 = require("@nestjs/graphql");
 const restaurants_module_1 = require("./restaurants/restaurants.module");
 const typeorm_1 = require("@nestjs/typeorm");
 const config_1 = require("@nestjs/config");
+const restaurants_entity_1 = require("./restaurants/entities/restaurants.entity");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -43,7 +44,8 @@ AppModule = __decorate([
                 username: process.env.DB_USERNAME,
                 password: process.env.DB_PASSWORD,
                 database: process.env.DB_NAME,
-                synchronize: true,
+                entities: [restaurants_entity_1.Restaurant],
+                synchronize: process.env.NODE_ENV !== 'prod',
                 logging: true,
             }),
             restaurants_module_1.RestaurantsModule,
