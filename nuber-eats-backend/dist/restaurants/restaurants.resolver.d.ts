@@ -1,3 +1,6 @@
+import { Restaurant } from './entities/restaurants.entity';
+import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 export declare class RestaurantsResolver {
-    myRestaurant(): boolean;
+    restaurants(veganOnly: string): Restaurant[];
+    createRestaurant(createRestaurantInput: CreateRestaurantDto): boolean;
 }

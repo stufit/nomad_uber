@@ -8,23 +8,40 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestaurantsResolver = void 0;
 const graphql_1 = require("@nestjs/graphql");
 const restaurants_entity_1 = require("./entities/restaurants.entity");
+const create_restaurant_dto_1 = require("./dto/create-restaurant.dto");
 let RestaurantsResolver = class RestaurantsResolver {
-    myRestaurant() {
+    restaurants(veganOnly) {
+        console.log(veganOnly);
+        return [];
+    }
+    createRestaurant(createRestaurantInput) {
+        console.log(createRestaurantInput);
         return true;
     }
 };
 __decorate([
-    (0, graphql_1.Query)((returns) => restaurants_entity_1.RestaurantsEntity),
+    (0, graphql_1.Query)((returns) => [restaurants_entity_1.Restaurant]),
+    __param(0, (0, graphql_1.Args)('veganOnly')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
-], RestaurantsResolver.prototype, "myRestaurant", null);
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Array)
+], RestaurantsResolver.prototype, "restaurants", null);
+__decorate([
+    (0, graphql_1.Mutation)((returns) => Boolean),
+    __param(0, (0, graphql_1.Args)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [create_restaurant_dto_1.CreateRestaurantDto]),
+    __metadata("design:returntype", Boolean)
+], RestaurantsResolver.prototype, "createRestaurant", null);
 RestaurantsResolver = __decorate([
-    (0, graphql_1.Resolver)((of) => restaurants_entity_1.RestaurantsEntity)
+    (0, graphql_1.Resolver)((of) => restaurants_entity_1.Restaurant)
 ], RestaurantsResolver);
 exports.RestaurantsResolver = RestaurantsResolver;
 //# sourceMappingURL=restaurants.resolver.js.map
