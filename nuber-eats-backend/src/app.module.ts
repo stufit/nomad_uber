@@ -1,4 +1,5 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import * as Joi from 'joi';
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { RestaurantsModule } from './restaurants/restaurants.module';
@@ -14,6 +15,15 @@ import { ConfigModule } from '@nestjs/config';
       // ignoreEnvFile : 서버에 deploy할 때 , 환경변수 파일을 사용하지 않음.
       // process.env.NODE_ENV 값이 PROD 일 때에만 true도록 설정 -> prod 환경일 때에는 환경변수 파일을 무시
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
+      // required 로 표시된 것이 없으면 validation 에러 뜸.
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string().valid('dev', 'prod').required(),
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.string().required(),
+        DB_USERNAME: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        DB_NAME: Joi.string().required(),
+      }),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
