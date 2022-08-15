@@ -10,7 +10,10 @@ import { ConfigModule } from '@nestjs/config';
       // isGlobal : 어플리케이션의 어디서나 config 모듈에 접근 할 수 있음.
       isGlobal: true,
       // envFilePath : 실행환경을 설정하는 것으로, 개발서버, stage서버, main 서버 등 나뉠 때 경로 설정
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.dev.env' : '.test.env',
+      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
+      // ignoreEnvFile : 서버에 deploy할 때 , 환경변수 파일을 사용하지 않음.
+      // process.env.NODE_ENV 값이 PROD 일 때에만 true도록 설정 -> prod 환경일 때에는 환경변수 파일을 무시
+      ignoreEnvFile: process.env.NODE_ENV === 'prod',
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
@@ -18,11 +21,11 @@ import { ConfigModule } from '@nestjs/config';
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'stufit',
-      password: 'stufit',
-      database: 'nuber-eats',
+      host: process.env.DB_HOST,
+      port: +process.env.DB_PORT, // string형식은 + 를 붙여줌으로써 number로 변환됨.
+      username: process.env.DB_USERNAME,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
       //entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
