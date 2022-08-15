@@ -19,9 +19,9 @@ export class RestaurantsResolver {
     @Args('ownerName') ownerName: string,
      */
     // 해당 부분은 dto를 이용하여 작성
-    @Args() createRestaurantInput: CreateRestaurantDto,
+    @Args() createRestaurantDto: CreateRestaurantDto,
   ): boolean {
-    console.log(createRestaurantInput);
+    console.log(createRestaurantDto);
     return true;
   }
 }

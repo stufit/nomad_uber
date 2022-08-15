@@ -21,8 +21,8 @@ let RestaurantsResolver = class RestaurantsResolver {
         console.log(veganOnly);
         return [];
     }
-    createRestaurant(createRestaurantInput) {
-        console.log(createRestaurantInput);
+    createRestaurant(createRestaurantDto) {
+        console.log(createRestaurantDto);
         return true;
     }
 };
