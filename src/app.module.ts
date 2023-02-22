@@ -30,6 +30,7 @@ import * as Joi from 'Joi';
       database: process.env.DB_DATABASE,
       synchronize: true,
       logging: true,
+      entities: [],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
