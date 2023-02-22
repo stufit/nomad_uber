@@ -14,4 +14,6 @@ export class CreateRestaurantInputDto {
   address: string;
   @Field((type) => String)
   ownerName: string;
+  @Field((type) => String)
+  categoryName: string;
 }

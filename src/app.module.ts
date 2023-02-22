@@ -5,6 +5,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'Joi';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
 @Module({
   imports: [
     RestaurantsModule,
@@ -30,7 +31,7 @@ import * as Joi from 'Joi';
       database: process.env.DB_DATABASE,
       synchronize: true,
       logging: true,
-      entities: [__dirname + '/**/*.entity.*'], //**은 모든 디렉토리,
+      entities: [Restaurant], //**은 모든 디렉토리,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
