@@ -2,9 +2,7 @@ import { ArgsType, Field, InputType, PartialType } from '@nestjs/graphql';
 import { CreateRestaurantInputDto } from './createRestaurantInput.dto';
 
 @InputType()
-export class UpdateRestaurantInputType extends PartialType(
-  CreateRestaurantInputDto,
-) {}
+class UpdateRestaurantInputType extends PartialType(CreateRestaurantInputDto) {}
 
 @InputType()
 export class UpdateRestaurantDto {
