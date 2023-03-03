@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { RestaurantsModule } from './restaurants/restaurants.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'Joi';
-import { Restaurant } from './restaurants/entities/restaurant.entity';
+import { UesrsModule } from './uesrs/uesrs.module';
+import { CommonModule } from './common/common.module';
+import { User } from './uesrs/entities/user.entity';
 @Module({
   imports: [
-    RestaurantsModule,
     ConfigModule.forRoot({
       isGlobal: true, // 어플리케이션의 어디서나 config 모듈에 접근할 수 있음
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
@@ -31,12 +31,14 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
       database: process.env.DB_DATABASE,
       synchronize: true,
       logging: true,
-      entities: [Restaurant], //**은 모든 디렉토리,
+      entities: [User], //**은 모든 디렉토리,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
     }),
+    UesrsModule,
+    CommonModule,
   ],
   controllers: [],
   providers: [],
