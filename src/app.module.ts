@@ -7,6 +7,7 @@ import * as Joi from 'Joi';
 import { UesrsModule } from './uesrs/uesrs.module';
 import { CommonModule } from './common/common.module';
 import { User } from './uesrs/entities/user.entity';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -38,7 +39,6 @@ import { User } from './uesrs/entities/user.entity';
       autoSchemaFile: true,
     }),
     UesrsModule,
-    CommonModule,
   ],
   controllers: [],
   providers: [],
