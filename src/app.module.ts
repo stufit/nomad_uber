@@ -45,6 +45,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
+      context: ({ req }) => ({ user: req['user'] }),
     }),
     UesrsModule,
     CommonModule,
@@ -59,7 +60,7 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(JwtMiddleware).forRoutes({
       path: '*',
-      method: RequestMethod.ALL,
+      method: RequestMethod.POST,
     });
   }
 }
