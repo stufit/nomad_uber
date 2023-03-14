@@ -5,9 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'Joi';
 import { UesrsModule } from './uesrs/uesrs.module';
-import { CommonModule } from './common/common.module';
 import { User } from './uesrs/entities/user.entity';
-import { Restaurant } from './restaurants/entities/restaurant.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -15,12 +13,13 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
       ignoreEnvFile: process.env.NODE_ENV === 'prod', // 서버에 배포시에는 환경변수 파일을 사용하지 않음
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string().valid('dev', 'prod'),
+        NODE_ENV: Joi.string().valid('dev', 'prod').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_DATABASE: Joi.string().required(),
+        SECRET_KEY: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
