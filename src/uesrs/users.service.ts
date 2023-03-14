@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Inject, Injectable } from '@nestjs/common';
 import { CreateAccountInput } from './dto/createAccount.dto';
 import { LoginInput } from './dto/login.dto';
-import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '../jwt/jwt.service';
 
@@ -71,5 +70,8 @@ export class UsersService {
         error,
       };
     }
+  }
+  async findById(id: number): Promise<User> {
+    return this.users.findOne({ where: { id } });
   }
 }
