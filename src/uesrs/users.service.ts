@@ -6,6 +6,7 @@ import { CreateAccountInput } from './dto/createAccount.dto';
 import { LoginInput } from './dto/login.dto';
 import * as jwt from 'jsonwebtoken';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '../jwt/jwt.service';
 
 @Injectable()
 export class UsersService {
@@ -13,8 +14,10 @@ export class UsersService {
     @InjectRepository(User)
     private readonly users: Repository<User>,
     private readonly config: ConfigService,
+    private readonly jwtService: JwtService,
   ) {
     console.log(this.config.get('SECRET_KEY'));
+    console.log(this.jwtService.hello());
   }
 
   async createAccount({

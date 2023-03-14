@@ -4,9 +4,10 @@ import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
 import { UsersResolver } from './users.resolver';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '../jwt/jwt.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User])],
-  providers: [ConfigService, UsersService, UsersResolver],
+  providers: [ConfigService, JwtService, UsersService, UsersResolver],
 })
 export class UesrsModule {}

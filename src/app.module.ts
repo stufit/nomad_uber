@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'Joi';
 import { UesrsModule } from './uesrs/uesrs.module';
 import { User } from './uesrs/entities/user.entity';
+import { JwtModule } from './jwt/jwt.module';
+import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -38,6 +40,8 @@ import { User } from './uesrs/entities/user.entity';
       autoSchemaFile: true,
     }),
     UesrsModule,
+    CommonModule,
+    JwtModule.forRoot(),
   ],
   controllers: [],
   providers: [],
