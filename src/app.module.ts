@@ -48,7 +48,6 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       context: ({ req }) => ({ user: req['user'] }),
     }),
     UesrsModule,
-    CommonModule,
     JwtModule.forRoot({
       privateKey: process.env.PRIVATE_KEY,
     }),
