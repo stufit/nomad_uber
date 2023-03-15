@@ -9,6 +9,7 @@ import { boolean } from 'joi';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
+import { AuthUser } from '../auth/auth-user.decorator';
 
 @Resolver((of) => User)
 export class UsersResolver {
@@ -53,6 +54,9 @@ export class UsersResolver {
   }
 
   @Query((returns) => User)
-  @UseGuards(AuthGuard)
-  me() {}
+  // @UseGuards(AuthGuard)
+  me(@AuthUser() authUser: User) {
+    console.log('야야', authUser);
+    return authUser;
+  }
 }
