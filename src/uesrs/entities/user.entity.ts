@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity } from 'typeorm';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import {
   Field,
@@ -37,7 +37,8 @@ export class User extends CoreEntity {
   role: UserRole;
 
   // 해시함수화
-  @BeforeInsert()
+  @BeforeInsert() // 새로 생성시
+  @BeforeUpdate() // 업데이트 시
   async hashPassword(): Promise<void> {
     try {
       this.password = await bcrypt.hash(this.password, 10);
