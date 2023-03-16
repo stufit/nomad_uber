@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateAccountInput,
   CreateAccountOutput,
@@ -125,6 +125,7 @@ export class UsersService {
       if (verification) {
         verification.user.verified = true;
         await this.users.save(verification.user);
+        await this.verifications.delete(verification.id);
         return { ok: true };
       }
       return { ok: false, error: 'Verification 을 찾을 수 없습니다.' };
