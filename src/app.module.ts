@@ -14,6 +14,7 @@ import { User } from './uesrs/entities/user.entity';
 import { JwtModule } from './jwt/jwt.module';
 import { CommonModule } from './common/common.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
+import { Verification } from './uesrs/entities/verification.entity';
 
 @Module({
   imports: [
@@ -40,7 +41,7 @@ import { JwtMiddleware } from './jwt/jwt.middleware';
       database: process.env.DB_DATABASE,
       synchronize: true,
       logging: true,
-      entities: [User], //**은 모든 디렉토리,
+      entities: [User, Verification], //**은 모든 디렉토리,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
