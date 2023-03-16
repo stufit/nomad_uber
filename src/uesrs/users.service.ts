@@ -98,4 +98,15 @@ export class UsersService {
     }
     this.users.save(user);
   }
+  async verifyEmail(code: string): Promise<boolean> {
+    const verification = await this.verifications.findOne({
+      where: { code },
+      relations: ['user'], // entity에 릴레이션 걸려있는것
+    });
+    if (verification) {
+      verification.user.verified = true;
+      await this.users.save(verification.user);
+    }
+    return false;
+  }
 }
