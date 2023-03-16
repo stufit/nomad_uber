@@ -2,12 +2,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { Inject, Injectable } from '@nestjs/common';
-import { CreateAccountInput } from './dto/createAccount.dto';
-import { LoginInput } from './dto/login.dto';
+import {
+  CreateAccountInput,
+  CreateAccountOutput,
+} from './dto/createAccount.dto';
+import { LoginInput, LoginOutput } from './dto/login.dto';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '../jwt/jwt.service';
 import { EditProfileInput } from './dto/edit-profile.dto';
 import { Verification } from './entities/verification.entity';
+import { VerifyEmailOutput } from './dto/verify-email.dto';
+import { UserProfileOutput } from './dto/user-profile.dto';
 
 @Injectable()
 export class UsersService {
@@ -22,16 +27,19 @@ export class UsersService {
     console.log('제이떠블유티', jwtService);
   }
 
-  async createAccount({
+  async createAccountService({
     email,
     password,
     role,
-  }: CreateAccountInput): Promise<[boolean, string?]> {
+  }: CreateAccountInput): Promise<CreateAccountOutput> {
     try {
       // check new user
       const exists = await this.users.findOne({ where: { email } }); // findOne에서 이젠 {email} 말고 {where} 붙여줘야함.
       if (exists) {
-        return [false, '해당 이메일을 가진 사용자가 이미 존재합니다.'];
+        return {
+          ok: false,
+          error: '해당 이메일을 가진 사용자가 이미 존재합니다.',
+        };
       }
       const user = await this.users.save(
         this.users.create({ email, password, role }),
@@ -41,16 +49,13 @@ export class UsersService {
           user,
         }),
       );
-      return [true];
+      return { ok: true };
     } catch (e) {
-      return [false, '계정을 생성할 수 없음'];
+      return { ok: false, error: '계정을 생성할 수 없음' };
     }
   }
 
-  async login({
-    email,
-    password,
-  }: LoginInput): Promise<{ ok: boolean; error?: string; token?: string }> {
+  async loginService({ email, password }: LoginInput): Promise<LoginOutput> {
     // [3] : JWT 생성
     try {
       // [1] : 유저이 이메일 찾기
@@ -85,8 +90,18 @@ export class UsersService {
       };
     }
   }
-  async findById(id: number): Promise<User> {
-    return this.users.findOne({ where: { id } });
+  async findByIdService(id: number): Promise<UserProfileOutput> {
+    try {
+      const user = await this.users.findOne({ where: { id } });
+      if (user) {
+        return {
+          ok: true,
+          user: user,
+        };
+      }
+    } catch (error) {
+      return { ok: false, error: '유저를 찾을 수 없습니다.' };
+    }
   }
 
   async editProfile(userId: number, { email, password }: EditProfileInput) {
@@ -101,7 +116,7 @@ export class UsersService {
     }
     await this.users.save(user);
   }
-  async verifyEmail(code: string): Promise<boolean> {
+  async verifyEmailService(code: string): Promise<VerifyEmailOutput> {
     try {
       const verification = await this.verifications.findOne({
         where: { code },
@@ -110,12 +125,12 @@ export class UsersService {
       if (verification) {
         verification.user.verified = true;
         await this.users.save(verification.user);
-        return true;
+        return { ok: true };
       }
-      throw new Error();
+      return { ok: false, error: 'Verification 을 찾을 수 없습니다.' };
     } catch (error) {
       console.log(error);
-      return false;
+      return { ok: false, error };
     }
   }
 }

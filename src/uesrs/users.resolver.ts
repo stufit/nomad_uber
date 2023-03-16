@@ -5,7 +5,6 @@ import {
   CreateAccountInput,
   CreateAccountOutput,
 } from './dto/createAccount.dto';
-import { boolean } from 'joi';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
@@ -22,39 +21,17 @@ export class UsersResolver {
   async createAccount(
     @Args('input') createAccountInput: CreateAccountInput,
   ): Promise<CreateAccountOutput> {
-    try {
-      const [ok, error] = await this.usersService.createAccount(
-        createAccountInput,
-      );
-      return {
-        ok,
-        error,
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
-    }
+    return this.usersService.createAccountService(createAccountInput);
   }
 
   @Mutation((returns) => LoginOutput)
   async login(@Args('input') loginInput: LoginInput): Promise<LoginOutput> {
-    try {
-      const { ok, error, token } = await this.usersService.login(loginInput);
-      return { ok, error, token };
-    } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
-    }
+    return await this.usersService.loginService(loginInput);
   }
 
   @Query((returns) => User)
   // @UseGuards(AuthGuard)
   me(@AuthUser() authUser: User) {
-    console.log('야야', authUser);
     return authUser;
   }
 
@@ -63,21 +40,7 @@ export class UsersResolver {
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
   ): Promise<UserProfileOutput> {
-    try {
-      const user = await this.usersService.findById(userProfileInput.userId);
-      if (!user) {
-        throw Error();
-      }
-      return {
-        ok: Boolean(user),
-        user,
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        error: '유져를 찾을 수 없습니다.',
-      };
-    }
+    return await this.usersService.findByIdService(userProfileInput.userId);
   }
 
   @UseGuards(AuthGuard)
@@ -104,16 +67,6 @@ export class UsersResolver {
   async verifyEmail(
     @Args('input') { code }: VerifyEmailInput,
   ): Promise<VerifyEmailOutput> {
-    try {
-      await this.usersService.verifyEmail(code);
-      return {
-        ok: true,
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        error,
-      };
-    }
+    return this.usersService.verifyEmailService(code);
   }
 }
