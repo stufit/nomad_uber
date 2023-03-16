@@ -27,7 +27,7 @@ export class User extends CoreEntity {
   @IsEmail()
   email: string;
 
-  @Column()
+  @Column({ select: false }) // select는 api call 시 해당 컬럼은 제외함.
   @Field((type) => String)
   password: string;
 
@@ -43,11 +43,13 @@ export class User extends CoreEntity {
   @BeforeInsert() // 새로 생성시
   @BeforeUpdate() // 업데이트 시
   async hashPassword(): Promise<void> {
-    try {
-      this.password = await bcrypt.hash(this.password, 10);
-    } catch (e) {
-      console.log(e);
-      throw new InternalServerErrorException();
+    if (this.password) {
+      try {
+        this.password = await bcrypt.hash(this.password, 10);
+      } catch (e) {
+        console.log(e);
+        throw new InternalServerErrorException();
+      }
     }
   }
 

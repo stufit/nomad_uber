@@ -54,7 +54,10 @@ export class UsersService {
     // [3] : JWT 생성
     try {
       // [1] : 유저이 이메일 찾기
-      const user = await this.users.findOne({ where: { email } });
+      const user = await this.users.findOne({
+        where: { email },
+        select: ['password', 'id'],
+      });
       if (!user) {
         return {
           ok: false,
@@ -96,17 +99,23 @@ export class UsersService {
     if (password) {
       user.password = password;
     }
-    this.users.save(user);
+    await this.users.save(user);
   }
   async verifyEmail(code: string): Promise<boolean> {
-    const verification = await this.verifications.findOne({
-      where: { code },
-      relations: ['user'], // entity에 릴레이션 걸려있는것
-    });
-    if (verification) {
-      verification.user.verified = true;
-      await this.users.save(verification.user);
+    try {
+      const verification = await this.verifications.findOne({
+        where: { code },
+        relations: ['user'], // entity에 릴레이션 걸려있는것
+      });
+      if (verification) {
+        verification.user.verified = true;
+        await this.users.save(verification.user);
+        return true;
+      }
+      throw new Error();
+    } catch (error) {
+      console.log(error);
+      return false;
     }
-    return false;
   }
 }
