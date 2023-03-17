@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
-import { IsEmail, IsEnum } from 'class-validator';
+import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
 import { ok } from 'assert';
 
 enum UserRole {
@@ -29,6 +29,7 @@ export class User extends CoreEntity {
 
   @Column({ select: false }) // select는 api call 시 해당 컬럼은 제외함.
   @Field((type) => String)
+  @IsString()
   password: string;
 
   @Column({ type: 'enum', enum: UserRole })
@@ -38,6 +39,7 @@ export class User extends CoreEntity {
 
   @Column({ default: false })
   @Field((type) => Boolean)
+  @IsBoolean()
   verified: boolean;
   // 해시함수화
   @BeforeInsert() // 새로 생성시

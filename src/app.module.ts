@@ -16,6 +16,8 @@ import { CommonModule } from './common/common.module';
 import { JwtMiddleware } from './jwt/jwt.middleware';
 import { Verification } from './uesrs/entities/verification.entity';
 import { MailModule } from './mail/mail.module';
+import { Restaurant } from './restaurants/entities/restaurant.entity';
+import { Category } from './restaurants/entities/category.entity';
 
 @Module({
   imports: [
@@ -45,7 +47,7 @@ import { MailModule } from './mail/mail.module';
       database: process.env.DB_DATABASE,
       synchronize: true,
       logging: true,
-      entities: [User, Verification], //**은 모든 디렉토리,
+      entities: [User, Verification, Restaurant, Category], //**은 모든 디렉토리,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

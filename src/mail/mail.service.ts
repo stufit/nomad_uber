@@ -10,9 +10,10 @@ export class MailService {
     @Inject(CONFIG_OPTIONS)
     private readonly options: MailModuleOptions,
   ) {
-    this.sendEmailService('테스트', '테스틍');
+    // this.sendEmailService('테스트', '테스틍');
     console.log(options);
   }
+  /*
   private async sendEmailService(subject: string, content: string) {
     const form = new FormData();
     form.append('from', `Excited User <mailgun@${this.options.domain}>`);
@@ -33,4 +34,6 @@ export class MailService {
     );
     console.log(response.body);
   }
+
+   */
 }
