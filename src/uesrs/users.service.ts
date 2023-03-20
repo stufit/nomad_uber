@@ -24,6 +24,7 @@ export class UsersService {
     private readonly config: ConfigService,
     private readonly jwtService: JwtService,
   ) {
+    console.log('증명:', verifications);
     console.log('제이떠블유티', jwtService);
   }
 

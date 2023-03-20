@@ -4,7 +4,7 @@ import { RestaurantService } from './restaurant.service';
 import {
   CreateRestaurantInput,
   CreateRestaurantOutput,
-} from './dto/createRestaurantInput.dto';
+} from './dto/createRestaurant.dto';
 import { AuthUser } from '../auth/auth-user.decorator';
 import { User } from '../uesrs/entities/user.entity';
 
@@ -12,7 +12,7 @@ import { User } from '../uesrs/entities/user.entity';
 export class RestaurantsResolver {
   constructor(private readonly restaurantService: RestaurantService) {}
 
-  @Mutation((returns) => Boolean)
+  @Mutation((returns) => CreateRestaurantOutput)
   async createRestaurant(
     @AuthUser() authUser: User,
     @Args('input')
