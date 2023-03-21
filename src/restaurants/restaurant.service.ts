@@ -22,6 +22,20 @@ export class RestaurantService {
     private readonly categories: Repository<Category>,
   ) {}
 
+  async getOrCreateCategory(name: string): Promise<Category> {
+    const categoryname = name.trim().toLowerCase().replace(/ +/g, '');
+    const categorySlug = categoryname.replace(/ /g, '-');
+    let category = await this.categories.findOne({
+      where: { slug: categorySlug },
+    });
+    if (!category) {
+      category = await this.categories.save(
+        this.categories.create({ slug: categorySlug, name: categoryname }),
+      );
+    }
+    return category;
+  }
+
   async createRestaurantService(
     owner: User,
     createRestaurantInput: CreateRestaurantInput,
@@ -32,19 +46,10 @@ export class RestaurantService {
         createRestaurantInput,
       );
       newRestaurant.owner = owner;
-      const categoryname = createRestaurantInput.categoryName
-        .trim()
-        .toLowerCase()
-        .replace(/ +/g, '');
-      const categorySlug = categoryname.replace(/ /g, '-');
-      let category = await this.categories.findOne({
-        where: { slug: categorySlug },
-      });
-      if (!category) {
-        category = await this.categories.save(
-          this.categories.create({ slug: categorySlug, name: categoryname }),
-        );
-      }
+
+      const category = await this.getOrCreateCategory(
+        createRestaurantInput.categoryName,
+      );
       newRestaurant.category = category;
       // save 는 DB에 저장한다.
       await this.restaurants.save(newRestaurant);
@@ -60,6 +65,29 @@ export class RestaurantService {
   }
   async editRestaurantService(
     owner: User,
-    editRestaurant: EditRestaurantInput,
-  ): Promise<EditRestaurantOutput> {}
+    editRestaurantInput: EditRestaurantInput,
+  ): Promise<EditRestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOneOrFail({
+        where: { id: editRestaurantInput.restaurantId },
+      });
+      if (!restaurant) {
+        return {
+          ok: false,
+          error: '레스토랑을 찾을 수 없습니다.',
+        };
+      }
+      if (owner.id !== restaurant.ownerId) {
+        return {
+          ok: false,
+          error: '당신은 오너가 아니므로 레스토랑을 생성할 수 없습니다.',
+        };
+      }
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }

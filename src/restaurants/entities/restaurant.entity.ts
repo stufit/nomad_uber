@@ -1,5 +1,11 @@
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  RelationId,
+} from 'typeorm';
 import { IsBoolean, IsOptional, IsString, Length } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Category } from './category.entity';
@@ -24,6 +30,9 @@ export class Restaurant extends CoreEntity {
   @Column()
   @IsString()
   address: string;
+
+  @RelationId((restaurant: Restaurant) => restaurant.owner) //owner의 id 값을 가져온다
+  ownerId: number;
 
   // 여러개의 restuarant 는 1 개의 category를 갖는다.
   @Field((type) => Category, { nullable: true })
