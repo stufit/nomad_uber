@@ -6,8 +6,7 @@ import {
   CreateRestaurantOutput,
 } from './dto/createRestaurant.dto';
 import { AuthUser } from '../auth/auth-user.decorator';
-import { User, UserRole } from '../uesrs/entities/user.entity';
-import { SetMetadata } from '@nestjs/common';
+import { User } from '../uesrs/entities/user.entity';
 import { Role } from '../auth/role.decorater';
 
 @Resolver((of) => Restaurant)

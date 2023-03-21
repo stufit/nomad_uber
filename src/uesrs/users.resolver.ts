@@ -6,12 +6,11 @@ import {
   CreateAccountOutput,
 } from './dto/createAccount.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
-import { UseGuards } from '@nestjs/common';
-import { AuthGuard } from '../auth/auth.guard';
 import { AuthUser } from '../auth/auth-user.decorator';
 import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { EditProfileInput, EditProfileOutput } from './dto/edit-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify-email.dto';
+import { Role } from '../auth/role.decorater';
 
 @Resolver((of) => User)
 export class UsersResolver {
@@ -30,12 +29,12 @@ export class UsersResolver {
   }
 
   @Query((returns) => User)
-  // @UseGuards(AuthGuard)
+  @Role(['Any'])
   me(@AuthUser() authUser: User) {
     return authUser;
   }
 
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   @Query((returns) => UserProfileOutput)
   async userProfile(
     @Args() userProfileInput: UserProfileInput,
@@ -43,7 +42,7 @@ export class UsersResolver {
     return await this.usersService.findByIdService(userProfileInput.userId);
   }
 
-  @UseGuards(AuthGuard)
+  @Role(['Any'])
   @Mutation((returns) => EditProfileOutput)
   async editProfile(
     @AuthUser() authUser: User,
