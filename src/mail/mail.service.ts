@@ -13,7 +13,6 @@ export class MailService {
     // this.sendEmailService('테스트', '테스틍');
     console.log(options);
   }
-  /*
   private async sendEmailService(subject: string, content: string) {
     const form = new FormData();
     form.append('from', `Excited User <mailgun@${this.options.domain}>`);
@@ -34,6 +33,4 @@ export class MailService {
     );
     console.log(response.body);
   }
-
-   */
 }

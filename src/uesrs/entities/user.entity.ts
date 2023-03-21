@@ -1,11 +1,4 @@
-import {
-  BeforeInsert,
-  BeforeUpdate,
-  Column,
-  Entity,
-  ManyToOne,
-  OneToMany,
-} from 'typeorm';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
 import { CoreEntity } from 'src/common/entities/core.entity';
 import {
   Field,
@@ -16,15 +9,14 @@ import {
 import * as bcrypt from 'bcrypt';
 import { InternalServerErrorException } from '@nestjs/common';
 import { IsBoolean, IsEmail, IsEnum, IsString } from 'class-validator';
-import { ok } from 'assert';
-import { Category } from '../../restaurants/entities/category.entity';
 import { Restaurant } from '../../restaurants/entities/restaurant.entity';
 
-enum UserRole {
-  Client,
-  Owner,
-  Delivery,
+export enum UserRole {
+  Client = 'Client',
+  Owner = 'Owner',
+  Delivery = 'Delivery',
 }
+
 // graphql용
 registerEnumType(UserRole, { name: 'UserRole' });
 @InputType('UserInputType', { isAbstract: true })
@@ -52,8 +44,8 @@ export class User extends CoreEntity {
   verified: boolean;
 
   // 여러개의 restuarant 는 1 개의 category를 갖는다.
-  @OneToMany((type) => Restaurant, (restuarant) => restuarant.owner)
   @Field((type) => [Restaurant])
+  @OneToMany((type) => Restaurant, (restaurant) => restaurant.owner)
   restaurants: Restaurant[];
 
   // 해시함수화

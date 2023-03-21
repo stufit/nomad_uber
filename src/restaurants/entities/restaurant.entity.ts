@@ -26,15 +26,17 @@ export class Restaurant extends CoreEntity {
   address: string;
 
   // 여러개의 restuarant 는 1 개의 category를 갖는다.
+  @Field((type) => Category, { nullable: true })
   @ManyToOne((type) => Category, (category) => category.restaurants, {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  @Field((type) => Category, { nullable: true })
   category: Category;
 
   // 여러개의 restuarant 는 1 개의 category를 갖는다.
-  @ManyToOne((type) => User, (user) => user.restaurants)
   @Field((type) => User)
+  @ManyToOne((type) => User, (user) => user.restaurants, {
+    onDelete: 'CASCADE',
+  })
   owner: User;
 }
