@@ -11,6 +11,8 @@ import { UserProfileInput, UserProfileOutput } from './dto/user-profile.dto';
 import { EditProfileInput, EditProfileOutput } from './dto/edit-profile.dto';
 import { VerifyEmailInput, VerifyEmailOutput } from './dto/verify-email.dto';
 import { Role } from '../auth/role.decorater';
+import { AuthGuard } from '../auth/auth.guard';
+import { UseGuards } from '@nestjs/common';
 
 @Resolver((of) => User)
 export class UsersResolver {
@@ -31,6 +33,7 @@ export class UsersResolver {
   @Query((returns) => User)
   @Role(['Any'])
   me(@AuthUser() authUser: User) {
+    console.log('어스유져');
     return authUser;
   }
 

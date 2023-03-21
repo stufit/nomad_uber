@@ -14,6 +14,7 @@ export class AuthGuard implements CanActivate {
     );
     console.log('역할!', roles);
     if (!roles) {
+      console.log('역할없음! 패스합니다.');
       return true;
     }
     const gqlContext = GqlExecutionContext.create(context).getContext();

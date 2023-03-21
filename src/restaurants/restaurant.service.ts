@@ -27,7 +27,7 @@ export class RestaurantService {
       const newRestaurant = await this.restaurants.create(
         createRestaurantInput,
       );
-      newRestaurant.owner = owner['user'];
+      newRestaurant.owner = owner;
       const categoryname = createRestaurantInput.categoryName
         .trim()
         .toLowerCase()
