@@ -8,6 +8,10 @@ import {
 import { AuthUser } from '../auth/auth-user.decorator';
 import { User } from '../uesrs/entities/user.entity';
 import { Role } from '../auth/role.decorater';
+import {
+  EditRestaurantInput,
+  EditRestaurantOutput,
+} from './dto/editRestaurant.dto';
 
 @Resolver((of) => Restaurant)
 export class RestaurantsResolver {
@@ -24,5 +28,16 @@ export class RestaurantsResolver {
       authUser,
       createRestaurantInput,
     );
+  }
+
+  @Mutation((returns) => EditRestaurantOutput)
+  @Role(['Owner'])
+  editRestaurant(
+    @AuthUser() authUser: User,
+    @Args('input') editRestaurant: EditRestaurantInput,
+  ): EditRestaurantOutput {
+    return {
+      ok: true,
+    };
   }
 }

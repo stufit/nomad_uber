@@ -8,6 +8,10 @@ import {
 } from './dto/createRestaurant.dto';
 import { User } from '../uesrs/entities/user.entity';
 import { Category } from './entities/category.entity';
+import {
+  EditRestaurantInput,
+  EditRestaurantOutput,
+} from './dto/editRestaurant.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -54,4 +58,8 @@ export class RestaurantService {
       };
     }
   }
+  async editRestaurantService(
+    owner: User,
+    editRestaurant: EditRestaurantInput,
+  ): Promise<EditRestaurantOutput> {}
 }
