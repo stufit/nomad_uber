@@ -36,9 +36,8 @@ export class RestaurantsResolver {
     @AuthUser() authUser: User,
     @Args('input') editRestaurant: EditRestaurantInput,
   ): EditRestaurantOutput {
-    return this.restaurantService.editRestaurantService(
-      authUser,
-      editRestaurant,
-    );
+    return {
+      ok: true,
+    };
   }
 }

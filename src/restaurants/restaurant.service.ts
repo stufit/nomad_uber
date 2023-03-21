@@ -12,6 +12,7 @@ import {
   EditRestaurantInput,
   EditRestaurantOutput,
 } from './dto/editRestaurant.dto';
+import { CategoryRepository } from './repositories/category.repository';
 
 @Injectable()
 export class RestaurantService {
@@ -19,22 +20,8 @@ export class RestaurantService {
     @InjectRepository(Restaurant)
     private readonly restaurants: Repository<Restaurant>,
     @InjectRepository(Category)
-    private readonly categories: Repository<Category>,
+    private readonly categories: CategoryRepository,
   ) {}
-
-  async getOrCreateCategory(name: string): Promise<Category> {
-    const categoryname = name.trim().toLowerCase().replace(/ +/g, '');
-    const categorySlug = categoryname.replace(/ /g, '-');
-    let category = await this.categories.findOne({
-      where: { slug: categorySlug },
-    });
-    if (!category) {
-      category = await this.categories.save(
-        this.categories.create({ slug: categorySlug, name: categoryname }),
-      );
-    }
-    return category;
-  }
 
   async createRestaurantService(
     owner: User,
@@ -47,7 +34,7 @@ export class RestaurantService {
       );
       newRestaurant.owner = owner;
 
-      const category = await this.getOrCreateCategory(
+      const category = await this.categories.getOrCreate(
         createRestaurantInput.categoryName,
       );
       newRestaurant.category = category;
@@ -83,6 +70,21 @@ export class RestaurantService {
           error: '당신은 오너가 아니므로 레스토랑을 생성할 수 없습니다.',
         };
       }
+      let category: Category = null;
+      if (editRestaurantInput.categoryName) {
+        category = await this.categories.getOrCreate(
+          editRestaurantInput.categoryName,
+        );
+      }
+      await this.restaurants.save(
+        this.restaurants.create([
+          {
+            id: editRestaurantInput.restaurantId,
+            ...editRestaurantInput,
+            ...(category && { category }),
+          },
+        ]),
+      );
       return {
         ok: true,
       };
