@@ -91,7 +91,6 @@ export class UsersService {
   async findByIdService(id: number): Promise<UserProfileOutput> {
     try {
       const user = await this.users.findOne({ where: { id } });
-      console.log('아이디', id);
       if (user) {
         return {
           ok: true,
