@@ -13,6 +13,10 @@ import {
   EditRestaurantOutput,
 } from './dto/editRestaurant.dto';
 import { CategoryRepository } from './repositories/category.repository';
+import {
+  DeleteRestaurantInput,
+  DeleteRestaurantOutput,
+} from './dto/deleteRestaurant.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -55,10 +59,9 @@ export class RestaurantService {
     editRestaurantInput: EditRestaurantInput,
   ): Promise<EditRestaurantOutput> {
     try {
-      const restaurant = await this.restaurants.findOneOrFail({
+      const restaurant = await this.restaurants.findOne({
         where: { id: editRestaurantInput.restaurantId },
       });
-      console.log('레스토랑', restaurant);
       if (!restaurant) {
         return {
           ok: false,
@@ -77,8 +80,6 @@ export class RestaurantService {
           editRestaurantInput.categoryName,
         );
       }
-      console.log(category);
-      console.log('레스토랑아이디:', editRestaurantInput.restaurantId);
       await this.restaurants.save(
         this.restaurants.create([
           {
@@ -93,6 +94,38 @@ export class RestaurantService {
       };
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  async deleteRestaurantService(
+    owner: User,
+    { restaurantId }: DeleteRestaurantInput,
+  ): Promise<DeleteRestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOne({
+        where: { id: restaurantId },
+      });
+      if (!restaurant) {
+        return {
+          ok: false,
+          error: '레스토랑을 찾을 수 없습니다.',
+        };
+      }
+      if (owner.id !== restaurant.ownerId) {
+        return {
+          ok: false,
+          error: '당신은 오너가 아니므로 레스토랑을 생성할 수 없습니다.',
+        };
+      }
+      await this.restaurants.delete(restaurantId);
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: '삭제할 수 없습니다.',
+      };
     }
   }
 }
