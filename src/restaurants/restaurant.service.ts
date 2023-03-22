@@ -152,6 +152,7 @@ export class RestaurantService {
 
   async findCategoryBySlugService({
     slug,
+    page,
   }: CategoryInput): Promise<CategoryOutput> {
     try {
       const category = await this.categories.findOne({
@@ -165,9 +166,17 @@ export class RestaurantService {
           error: '카테고리가 존재하지 않습니다.',
         };
       }
+      const restaurants = await this.restaurants.find({
+        where: { category: { id: category.id } },
+        take: 25,
+        skip: (page - 1) * 25,
+      });
+      category.restaurants = restaurants;
+      const totalResults = await this.counstRestaurantService(category);
       return {
         ok: true,
         category,
+        totalPages: Math.ceil(totalResults / 25),
       };
     } catch (error) {
       return {
