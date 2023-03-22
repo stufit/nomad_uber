@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Restaurant } from './entities/restaurant.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import {
   CreateRestaurantInput,
   CreateRestaurantOutput,
@@ -20,6 +20,11 @@ import {
 import { AllCategoriesOutput } from './dto/allCategory.dto';
 import { CategoryInput, CategoryOutput } from './dto/category.dto';
 import { RestaurantsInput, RestaurantsOutput } from './dto/restaurants.dto';
+import { RestaurantInput, RestaurantOutput } from './dto/restaurant.dto';
+import {
+  SearchRestaurantInput,
+  SearchRestaurantOutput,
+} from './dto/searchRestaurant.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -201,6 +206,49 @@ export class RestaurantService {
         totalPages: Math.ceil(totalResults / 25),
         totalResults,
       };
+    } catch (error) {
+      return {
+        ok: false,
+        error: '레스토랑을 찾을 수 없습니다.',
+      };
+    }
+  }
+
+  async findRestaurantByIdService(
+    restaurantInput: RestaurantInput,
+  ): Promise<RestaurantOutput> {
+    try {
+      const restaurant = await this.restaurants.findOne({
+        where: { id: restaurantInput.restaurantId },
+      });
+      if (!restaurant) {
+        return {
+          ok: false,
+          error: '레스토랑을 찾을 수 없습니다.',
+        };
+      }
+      return {
+        ok: true,
+        restaurant,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: '레스토랑을 찾을 수 없습니다.',
+      };
+    }
+  }
+
+  async searchRestaurantByNameService({
+    query,
+    page,
+  }: SearchRestaurantInput): Promise<SearchRestaurantOutput> {
+    try {
+      const [restaurants, totalResults] = await this.restaurants.findAndCount({
+        where: {
+          name: Like(`%배고파%`),
+        },
+      });
     } catch (error) {
       return {
         ok: false,
