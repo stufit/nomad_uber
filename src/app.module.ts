@@ -20,6 +20,7 @@ import { Restaurant } from './restaurants/entities/restaurant.entity';
 import { Category } from './restaurants/entities/category.entity';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoryRepository } from './restaurants/repositories/category.repository';
 
 @Module({
   imports: [
