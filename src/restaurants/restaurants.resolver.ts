@@ -1,4 +1,11 @@
-import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import {
+  Args,
+  Mutation,
+  Parent,
+  Query,
+  ResolveField,
+  Resolver,
+} from '@nestjs/graphql';
 import { Restaurant } from './entities/restaurant.entity';
 import { RestaurantService } from './restaurant.service';
 import {
@@ -67,8 +74,11 @@ export class CategoryResolver {
 
   // 해당 리졸버는 db나 entity에는 생기지 않음. dynamic field 라고 불림.
   @ResolveField((type) => Number)
-  restaurantCount(): number {
-    return 80;
+  restaurantCount(@Parent() category: Category): Promise<number> {
+    console.log('다이나믹카테고리:', category);
+    const countCategory =
+      this.restaurantService.counstRestaurantService(category);
+    return countCategory;
   }
 
   @Query((returns) => AllCategoriesOutput)
