@@ -11,7 +11,7 @@ export class MailService {
     private readonly options: MailModuleOptions,
   ) {
     // this.sendEmailService('테스트', '테스틍');
-    console.log(options);
+    // console.log(options);
   }
   private async sendEmailService(subject: string, content: string) {
     const form = new FormData();

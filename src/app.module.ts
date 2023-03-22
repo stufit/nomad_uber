@@ -21,6 +21,7 @@ import { Category } from './restaurants/entities/category.entity';
 import { RestaurantsModule } from './restaurants/restaurants.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoryRepository } from './restaurants/repositories/category.repository';
+import { Dish } from './restaurants/entities/dish.entity';
 
 @Module({
   imports: [
@@ -50,7 +51,7 @@ import { CategoryRepository } from './restaurants/repositories/category.reposito
       database: process.env.DB_DATABASE,
       synchronize: true,
       logging: true,
-      entities: [User, Verification, Restaurant, Category], //**은 모든 디렉토리,
+      entities: [User, Verification, Restaurant, Category, Dish], //**은 모든 디렉토리,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
