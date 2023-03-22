@@ -17,6 +17,7 @@ import {
   DeleteRestaurantInput,
   DeleteRestaurantOutput,
 } from './dto/deleteRestaurant.dto';
+import { AllCategoriesOutput } from './dto/allCategory.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -125,6 +126,21 @@ export class RestaurantService {
       return {
         ok: false,
         error: '삭제할 수 없습니다.',
+      };
+    }
+  }
+
+  async allCategoryService(): Promise<AllCategoriesOutput> {
+    try {
+      const categories = await this.categories.find();
+      return {
+        ok: true,
+        categories,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: '카테고리를 불러올 수 없습니다.',
       };
     }
   }

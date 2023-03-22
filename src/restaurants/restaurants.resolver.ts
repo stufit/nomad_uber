@@ -1,4 +1,4 @@
-import { Args, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, ResolveField, Resolver } from '@nestjs/graphql';
 import { Restaurant } from './entities/restaurant.entity';
 import { RestaurantService } from './restaurant.service';
 import {
@@ -16,6 +16,8 @@ import {
   DeleteRestaurantInput,
   DeleteRestaurantOutput,
 } from './dto/deleteRestaurant.dto';
+import { Category } from './entities/category.entity';
+import { AllCategoriesOutput } from './dto/allCategory.dto';
 
 @Resolver((of) => Restaurant)
 export class RestaurantsResolver {
@@ -56,5 +58,21 @@ export class RestaurantsResolver {
       owner,
       deleteRestaurantInput,
     );
+  }
+}
+
+@Resolver((of) => Category)
+export class CategoryResolver {
+  constructor(private readonly restaurantService: RestaurantService) {}
+
+  // 해당 리졸버는 db나 entity에는 생기지 않음. dynamic field 라고 불림.
+  @ResolveField((type) => Number)
+  restaurantCount(): number {
+    return 80;
+  }
+
+  @Query((returns) => AllCategoriesOutput)
+  async allCategories(): Promise<AllCategoriesOutput> {
+    return await this.restaurantService.allCategoryService();
   }
 }
