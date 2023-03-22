@@ -18,6 +18,7 @@ import {
   DeleteRestaurantOutput,
 } from './dto/deleteRestaurant.dto';
 import { AllCategoriesOutput } from './dto/allCategory.dto';
+import { CategoryInput, CategoryOutput } from './dto/category.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -147,5 +148,32 @@ export class RestaurantService {
 
   counstRestaurantService(category: Category) {
     return this.restaurants.count({ where: { category: { id: category.id } } });
+  }
+
+  async findCategoryBySlugService({
+    slug,
+  }: CategoryInput): Promise<CategoryOutput> {
+    try {
+      const category = await this.categories.findOne({
+        where: { slug: slug },
+        relations: ['restaurants'],
+      });
+      console.log('카테고리슬러그:', category);
+      if (!category) {
+        return {
+          ok: false,
+          error: '카테고리가 존재하지 않습니다.',
+        };
+      }
+      return {
+        ok: true,
+        category,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error: '카테고리를 불러올 수 없습니다.',
+      };
+    }
   }
 }

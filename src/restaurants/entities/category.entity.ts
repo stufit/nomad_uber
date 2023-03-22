@@ -26,6 +26,6 @@ export class Category extends CoreEntity {
 
   // 카테고리 1개가 여러개의 restuarant를 갖는다.
   @OneToMany((type) => Restaurant, (restaurant) => restaurant.category)
-  @Field((type) => [Restaurant])
+  @Field((type) => [Restaurant], { nullable: true })
   restaurants: Restaurant[];
 }
