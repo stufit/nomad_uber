@@ -25,6 +25,7 @@ import {
   SearchRestaurantInput,
   SearchRestaurantOutput,
 } from './dto/searchRestaurant.dto';
+import { CreateDishInput, CreateDishOutput } from './dto/createDish.dto';
 
 @Injectable()
 export class RestaurantService {
@@ -220,6 +221,7 @@ export class RestaurantService {
     try {
       const restaurant = await this.restaurants.findOne({
         where: { id: restaurantInput.restaurantId },
+        relations: ['menu'],
       });
       if (!restaurant) {
         return {
@@ -264,5 +266,13 @@ export class RestaurantService {
         error: '레스토랑을 찾을 수 없습니다.',
       };
     }
+  }
+  async createDishService(
+    owner: User,
+    createDishInput: CreateDishInput,
+  ): Promise<CreateDishOutput> {
+    return {
+      ok: false,
+    };
   }
 }
