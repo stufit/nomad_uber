@@ -13,8 +13,8 @@ class DishOption {
   @Field((type) => [String], { nullable: true })
   choices?: string[];
 
-  @Field((type) => Number)
-  extra: number;
+  @Field((type) => Number, { nullable: true })
+  extra?: number;
 }
 
 @InputType('DishInputType', { isAbstract: true })
@@ -32,19 +32,20 @@ export class Dish extends CoreEntity {
   @IsNumber()
   price: number;
 
-  @Field((type) => String)
+  @Field((type) => String, { nullable: true })
   @Column({ nullable: true })
   @IsString()
-  photo: string;
+  photo?: string;
 
   @Field((type) => String, { nullable: true })
   @Column()
   @Length(5, 140)
   description: string;
 
-  @Field((type) => Restaurant, { nullable: true })
+  @Field((type) => Restaurant, { nullable: false })
   @ManyToOne((type) => Restaurant, (restaurant) => restaurant.menu, {
     onDelete: 'CASCADE',
+    nullable: false, // 레스토랑은 필수값이다. 그러므로 null 값이 있으면 안됨.
   })
   restaurant: Restaurant;
 

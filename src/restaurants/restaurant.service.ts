@@ -26,6 +26,7 @@ import {
   SearchRestaurantOutput,
 } from './dto/searchRestaurant.dto';
 import { CreateDishInput, CreateDishOutput } from './dto/createDish.dto';
+import { Dish } from './entities/dish.entity';
 
 @Injectable()
 export class RestaurantService {
@@ -34,6 +35,8 @@ export class RestaurantService {
     private readonly restaurants: Repository<Restaurant>,
     @InjectRepository(CategoryRepository)
     private readonly categories: CategoryRepository,
+    @InjectRepository(Dish)
+    private readonly dishes: Repository<Dish>,
   ) {}
 
   async createRestaurantService(
@@ -271,8 +274,35 @@ export class RestaurantService {
     owner: User,
     createDishInput: CreateDishInput,
   ): Promise<CreateDishOutput> {
-    return {
-      ok: false,
-    };
+    try {
+      const restaurant = await this.restaurants.findOne({
+        where: { id: createDishInput.restaurantId },
+      });
+      if (!restaurant) {
+        return {
+          ok: false,
+          error: '레스토랑을 찾을 수 없습니다.',
+        };
+      }
+      if (owner.id !== restaurant.ownerId) {
+        return {
+          ok: false,
+          error: '권한이 없습니다.',
+        };
+      }
+      const dish = await this.dishes.save(
+        this.dishes.create({ ...createDishInput, restaurant }),
+      );
+      console.log(dish);
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        error: '메뉴를 생성할 수 없습니다.',
+      };
+    }
   }
 }
